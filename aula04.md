@@ -38,7 +38,50 @@ A seta só vai num sentido: o Controller chama o Service, o Service chama o
 Repository. Nunca o contrário. O Repository não sabe que o Service existe, e
 o Service não sabe que existe um `req.body`.
 
-## 1. Repository: o único arquivo que conhece SQL
+## 1. banco.js: a conexão com o banco ganha um arquivo só dela
+
+Na Aula 03 a conexão e o `CREATE TABLE` ficavam no topo do `servidor.js`.
+Agora quem vai falar com o banco é o Repository, então a conexão precisa sair
+do `servidor.js` e morar num arquivo que o Repository consiga importar.
+
+Crie `banco.js` na raiz do projeto (ao lado do `servidor.js`) e **mova pra
+ele** o que estava no topo do `servidor.js`: a linha do `new DatabaseSync` e o
+`db.exec` com o `CREATE TABLE`:
+
+```js
+const { DatabaseSync } = require('node:sqlite');
+
+const db = new DatabaseSync('treinos.db');
+
+db.exec(`
+    CREATE TABLE IF NOT EXISTS treinos (
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome    TEXT    NOT NULL,
+        duracao INTEGER NOT NULL
+    )
+`);
+
+module.exports = db;
+```
+
+A última linha é a que importa: `module.exports = db` entrega o banco já
+conectado para quem fizer `require('./banco.js')`. Em C seria como o `.h` que
+expõe a variável pra outros arquivos. Quem quiser usar o banco pede o `db` a
+esse arquivo, e a conexão e a criação da tabela acontecem uma vez só.
+
+**Confira antes de seguir.** Crie um arquivo avulso `teste-banco2.js`:
+
+```js
+const db = require('./banco.js');
+
+console.log(db.prepare('SELECT * FROM treinos').all());
+```
+
+Rode com `node teste-banco2.js`. Se aparecer a lista (ou `[]` se estiver
+vazia), o `banco.js` está certo. Se der `Cannot find module`, o arquivo está
+na pasta errada ou com o nome errado.
+
+## 2. Repository: o único arquivo que conhece SQL
 
 Crie `repositories/treinosRepository.js`:
 
@@ -76,7 +119,7 @@ module.exports = { listarTodos, buscarPorId, criar, atualizar, remover };
 
 Repare: nenhuma linha tem `req`, `res` ou `if (erro)`. Só dado puro.
 
-## 2. Service: onde mora a regra de negócio
+## 3. Service: onde mora a regra de negócio
 
 Crie `services/treinosService.js`:
 
@@ -137,7 +180,7 @@ O Service não tem `res`, então não pode responder `400` sozinho. Ele devolve
 um objeto simples (`{ erro }`, `{ naoEncontrado: true }` ou `{ treino }`) e é
 o Controller quem traduz isso em status HTTP.
 
-## 3. Controller: o único arquivo que conhece HTTP
+## 4. Controller: o único arquivo que conhece HTTP
 
 Crie `controllers/treinosController.js`:
 
@@ -192,7 +235,7 @@ module.exports = { listar, buscarUm, criar, atualizar, remover };
 O Controller não sabe o que faz um treino ser válido, só pergunta ao Service
 e traduz a resposta.
 
-## 4. servidor.js emagrece
+## 5. servidor.js emagrece
 
 ```js
 const express = require('express');
@@ -214,18 +257,20 @@ app.listen(PORTA, () => {
 ```
 
 Apague do `servidor.js` tudo que virou responsabilidade de outra camada: a
-conexão direta com o `db`, a função `validarTreino` antiga e o corpo das
-cinco rotas.
+conexão direta com o `db` e o `CREATE TABLE` (agora no `banco.js`), a função
+`validarTreino` antiga e o corpo das cinco rotas.
 
 ## Como fazer, na ordem
 
-1. Crie as pastas `repositories/`, `services/` e `controllers/`.
-2. Crie o Repository. Rode `npm start`: nada muda ainda, porque ninguém usa
+1. Crie o `banco.js` (passo 1) e confira com o `teste-banco2.js`.
+2. Crie as pastas `repositories/`, `services/` e `controllers/`.
+3. Crie o Repository. Rode `npm start`: nada muda ainda, porque ninguém usa
    esse arquivo.
-3. Crie o Service.
-4. Crie o Controller.
-5. Troque o `servidor.js` pela versão enxuta e apague o código antigo.
-6. Rode todos os blocos do `testes.http`. Tem que responder exatamente igual
+4. Crie o Service.
+5. Crie o Controller.
+6. Troque o `servidor.js` pela versão enxuta e apague o código antigo,
+   inclusive a conexão com o banco, que agora está no `banco.js`.
+7. Rode todos os blocos do `testes.http`. Tem que responder exatamente igual
    à Aula 03.
 
 Erro mais comum: caminho de `require` errado. De dentro de `services/` ou
@@ -233,6 +278,9 @@ Erro mais comum: caminho de `require` errado. De dentro de `services/` ou
 (`../repositories/treinosRepository.js`).
 
 ## Exercícios
+
+**Os dois valem nota.** Não são desafio bônus nem opcional: pra tirar a nota
+cheia da entrega da Aula 04 precisa entregar os dois funcionando.
 
 1. **Prove que o Service não depende do Express.** Crie um arquivo avulso
    `teste-service.js`, fora de qualquer rota:
