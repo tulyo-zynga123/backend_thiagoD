@@ -90,3 +90,125 @@ DELETE {{url}}/treinos/99999
 
 ### 12 - Listar de novo pra conferir       -> espera 200
 GET {{url}}/treinos
+
+
+
+### LOGIN COM DIEGO
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "usuario": "diego",
+  "senha": "1234"
+}
+
+### VER PERFIL
+GET http://localhost:3000/perfil
+
+### LOGOUT
+POST http://localhost:3000/logout
+
+### PERFIL DEPOIS DO LOGOUT
+GET http://localhost:3000/perfil
+
+### LOGIN COM SENHA ERRADA
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "usuario": "diego",
+  "senha": "9999"
+}
+
+### LOGIN COM USUARIO INEXISTENTE
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "usuario": "inexistente",
+  "senha": "1234"
+}
+
+### LOGIN COM ALUNO
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "usuario": "aluno",
+  "senha": "senha"
+}
+
+### PERFIL DO ALUNO
+GET http://localhost:3000/perfil
+
+### Login correto
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "diego",
+    "senha": "1234"
+}
+
+### Consultar perfil
+GET http://localhost:3000/perfil
+
+### Logout
+POST http://localhost:3000/logout
+
+### Perfil depois do logout
+GET http://localhost:3000/perfil
+
+### Login com senha errada
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "diego",
+    "senha": "errada"
+}
+
+### Login com usuário inexistente
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "inexistente",
+    "senha": "1234"
+}
+
+### login correto
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "diego",
+    "senha": "1234"
+}
+
+### perfil com a sessao
+GET http://localhost:3000/perfil
+
+### senha errada
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "diego",
+    "senha": "errada"
+}
+
+### usuario inexistente
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "usuario": "nao-existe",
+    "senha": "1234"
+}
+
+### logout
+POST http://localhost:3000/logout
+
+### perfil depois do logout
+GET http://localhost:3000/perfil
