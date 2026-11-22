@@ -1,0 +1,154 @@
+@host = http://localhost:3000
+
+### ---------- autenticacao (Aulas 05 e 06) ----------
+
+### 1. login correto -> 200 e Set-Cookie
+POST {{host}}/login
+Content-Type: application/json
+
+{ "usuario": "diego", "senha": "1234" }
+
+### 2. perfil -> 200 { id, usuario }
+GET {{host}}/perfil
+
+### 3. senha errada -> 401
+POST {{host}}/login
+Content-Type: application/json
+
+{ "usuario": "diego", "senha": "errada" }
+
+### 4. usuario inexistente -> 401 com a mesma mensagem
+POST {{host}}/login
+Content-Type: application/json
+
+{ "usuario": "nao-existe", "senha": "1234" }
+
+### 5. logout -> 204
+POST {{host}}/logout
+
+### 6. perfil depois do logout -> 401
+GET {{host}}/perfil
+
+
+### ---------- card A: cadastro ----------
+
+### usuario vazio -> 400
+POST {{host}}/cadastro
+Content-Type: application/json
+
+{ "usuario": "", "senha": "1234" }
+
+### senha curta -> 400
+POST {{host}}/cadastro
+Content-Type: application/json
+
+{ "usuario": "maria", "senha": "12" }
+
+### cadastro valido -> 201 { id, usuario }  (sem senha na resposta)
+POST {{host}}/cadastro
+Content-Type: application/json
+
+{ "usuario": "maria", "senha": "abcd" }
+
+### de novo -> 409
+POST {{host}}/cadastro
+Content-Type: application/json
+
+{ "usuario": "maria", "senha": "abcd" }
+
+### a maria consegue entrar -> 200
+POST {{host}}/login
+Content-Type: application/json
+
+{ "usuario": "maria", "senha": "abcd" }
+
+
+### ---------- treinos (faca o login primeiro) ----------
+
+### login do diego de novo, para os testes abaixo
+POST {{host}}/login
+Content-Type: application/json
+
+{ "usuario": "diego", "senha": "1234" }
+
+### listar -> 200
+GET {{host}}/treinos
+
+### criar -> 201 (com concluido: false)
+POST {{host}}/treinos
+Content-Type: application/json
+
+{ "nome": "Corrida leve", "duracao": 30 }
+
+### nome vazio -> 400
+POST {{host}}/treinos
+Content-Type: application/json
+
+{ "nome": "", "duracao": 30 }
+
+### duracao acima de 180 -> 400
+POST {{host}}/treinos
+Content-Type: application/json
+
+{ "nome": "Maratona", "duracao": 181 }
+
+### buscar um -> 200 (troque o 1 por um id que exista)
+GET {{host}}/treinos/1
+
+### id que nao existe -> 404
+GET {{host}}/treinos/999999
+
+### atualizar -> 200
+PUT {{host}}/treinos/1
+Content-Type: application/json
+
+{ "nome": "Corrida forte", "duracao": 45 }
+
+
+### ---------- card B: PUT e DELETE exigem login ----------
+# Para ver o 401, rode primeiro o "logout" (bloco 5) e depois estes dois.
+
+### PUT sem login -> 401
+PUT {{host}}/treinos/1
+Content-Type: application/json
+
+{ "nome": "x", "duracao": 10 }
+
+### DELETE sem login -> 401
+DELETE {{host}}/treinos/1
+
+
+### ---------- card C: id invalido -> 400 ----------
+
+### texto
+GET {{host}}/treinos/abc
+
+### negativo
+GET {{host}}/treinos/-1
+
+### decimal
+GET {{host}}/treinos/1.5
+
+### notacao cientifica (vale 100 no Number(), mas nao e um id escrito certo)
+GET {{host}}/treinos/1e2
+
+
+### ---------- card D: concluir ----------
+
+### concluir -> 200 com concluido: true
+PUT {{host}}/treinos/1/concluir
+
+### id que nao existe -> 404 em JSON
+PUT {{host}}/treinos/999999/concluir
+
+
+### ---------- card E: total ----------
+
+### total -> 200 { total: N }
+GET {{host}}/treinos/total
+
+
+### ---------- apagar ----------
+
+### apagar -> 204 (precisa estar logado)
+DELETE {{host}}/treinos/1
