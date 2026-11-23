@@ -1,273 +1,248 @@
-* {
-  box-sizing: border-box;
-}
+/* =====================================================================
+   style.css
+   ---------------------------------------------------------------------
+   A ideia é que vocês reescrevam o que quiserem aqui, deixando com a cara do Figma
+   de vocês.
 
+   ONDE MEXER:
+   - Se for COR, TAMANHO DE FONTE, ARREDONDAMENTO ou SOMBRA -> mexe
+     em tokens.css (é mais fácil).
+   - Se for LAYOUT (posição, tamanho, espaçamento, alinhamento) -> mexe
+     aqui no style.css.
+
+   Cada bloco abaixo tem um comentário explicando o que ele faz e de
+   onde vieram os valores. Pode apagar os comentários quando terminar,
+   mas NÃO apague as classes (o JSX usa esses nomes).
+   ===================================================================== */
+
+* { box-sizing: border-box; }
+
+/* ---- Corpo da página ----
+   Fundo, fonte e cor dos textos vêm de tokens.css.
+   Se quiser mudar o espaçamento geral, mexe no --espacamento de lá. */
 body {
   margin: 0;
-  background: var(--cor-fundo);
-  color: var(--cor-texto);
   font-family: var(--fonte);
   font-size: var(--tamanho-base);
-  line-height: 1.45;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
 }
 
+/* ---- Container central ----
+   Limita a largura da página pra não ficar esticado em tela grande.
+   No Figma: mede a largura do frame principal (ex: 760, 1200).
+   Troca o max-width abaixo pelo valor do Figma. */
 .pagina {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
   padding: var(--espacamento);
 }
 
+/* ---- Cabeçalho (.topo) ----
+   Título na esquerda, sessão na direita.
+   No Figma: se for diferente, mexe no flex.
+   Alinhamento: flex-start (esquerda), center, space-between (extremos). */
 .topo {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--espacamento);
   flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: baseline;
   margin-bottom: var(--espacamento);
 }
-
 .topo h1 {
   margin: 0;
-  font-size: var(--tamanho-titulo);
-  color: var(--cor-primaria);
+  font-size: var(--tamanho-titulo);   /* vem de tokens.css */
+  color: var(--cor-primaria);        /* vem de tokens.css */
 }
+.sessao { color: var(--cor-texto-suave); }
 
-.sessao {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--cor-texto-suave);
-}
-
+/* ---- Abas (.abas / .aba) ----
+   As abas de navegação (Treinos, Diagnóstico...).
+   No Figma: se as abas tiverem sublinhado embaixo em vez de fundo
+   preenchido, troca o background do .aba[aria-selected='true']
+   por border-bottom, por exemplo. */
 .abas {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: var(--espacamento);
 }
-
 .aba {
+  padding: 6px 12px;
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--cor-borda);
   background: var(--cor-superficie);
   color: var(--cor-texto);
-  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-botao);
-  padding: 8px 14px;
-  cursor: pointer;
-  font: inherit;
 }
-
 .aba[aria-selected='true'] {
   background: var(--cor-primaria);
   color: var(--cor-primaria-texto);
   border-color: var(--cor-primaria);
 }
 
+/* ---- Cartões (.cartao) ----
+   Os blocos que agrupam conteúdo (formulário, lista, diagnóstico).
+   Borda, raio e sombra vêm de tokens.css.
+   Se quiser cartão sem borda e só com sombra (ou só com fundo diferente),
+   tira o "border" e deixa só "box-shadow" (ou vice-versa). */
 .cartao {
-  background: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
+  padding: 12px;
+  margin-bottom: 12px;
   border-radius: var(--raio-borda);
   box-shadow: var(--sombra);
-  padding: var(--espacamento);
-  margin-bottom: var(--espacamento);
+  background: var(--cor-superficie);
 }
-
 .cartao h2 {
-  margin: 0 0 10px;
-  font-size: 1.15rem;
+  margin: 0 0 8px;
+  font-size: 1.1rem;
 }
 
+/* ---- Formulário ----
+   Os campos de input e o botão de adicionar treino.
+   No Figma: se o formulário tiver outra proporção (ex: botão embaixo
+   em vez de ao lado), muda o .linha-form pra "display: block".
+   Se for em duas colunas, usa "display: grid" com grid-template-columns. */
+.campo { margin-bottom: 8px; }
 label {
   display: block;
   font-size: 0.9rem;
   color: var(--cor-texto-suave);
-  margin-bottom: 4px;
 }
-
 input {
   width: 100%;
-  padding: 9px 10px;
+  padding: 4px 6px;
+  font: inherit;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-botao);
   background: var(--cor-superficie);
   color: var(--cor-texto);
-  font: inherit;
-}
-
-input:focus-visible,
-button:focus-visible {
-  outline: 3px solid var(--cor-primaria);
-  outline-offset: 2px;
-}
-
-.campo {
-  margin-bottom: 12px;
 }
 
 .linha-form {
-  display: grid;
-  grid-template-columns: 1fr 140px auto;
-  gap: 10px;
-  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+.linha-form > .campo {
+  flex: 1;
+  min-width: 120px;
+  margin-bottom: 0;
 }
 
+/* ---- Botões ----
+   Cores vêm de tokens.css.
+   Se o Figma tiver botão "pill" (bem arredondado), troca --raio-botao
+   pra 999px em tokens.css.
+   Tipos:
+     button             -> botão principal (preenchido)
+     button.secundario  -> botão com fundo branco (só contorno)
+     button.perigo      -> botão de apagar (vermelho)
+   Se no Figma o botão tiver ícone, dá pra colocar um <svg> dentro do
+   <button> no JSX. */
 button {
   font: inherit;
-  padding: 9px 14px;
-  border-radius: var(--raio-botao);
+  padding: 5px 12px;
+  cursor: pointer;
   border: 1px solid var(--cor-primaria);
   background: var(--cor-primaria);
   color: var(--cor-primaria-texto);
-  cursor: pointer;
+  border-radius: var(--raio-botao);
 }
-
 button.secundario {
   background: var(--cor-superficie);
   color: var(--cor-primaria);
 }
-
 button.perigo {
   background: var(--cor-superficie);
   color: var(--cor-erro);
   border-color: var(--cor-erro);
 }
-
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.mensagem-erro {
-  color: var(--cor-erro);
-  margin: 8px 0 0;
-}
+/* ---- Mensagens ----
+   Textos de feedback embaixo dos formulários.
+   No Figma: se tiver um componente de "alert" (bloco com fundo colorido),
+   reescreve aqui pra ter background + padding. */
+.mensagem-erro { color: var(--cor-erro); }
+.mensagem-ok   { color: var(--cor-sucesso); }
+.aviso         { color: var(--cor-aviso); }
+.suave         { color: var(--cor-texto-suave); }
 
-.mensagem-ok {
-  color: var(--cor-sucesso);
-  margin: 8px 0 0;
-}
-
-.aviso {
-  color: var(--cor-aviso);
-  margin: 8px 0 0;
-}
-
-.suave {
-  color: var(--cor-texto-suave);
-}
-
-.lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
+/* ---- Lista de treinos ----
+   Cada .item é uma linha da lista (nome, duração, botões de ação).
+   No Figma: se for card por item em vez de linha, troca .item pra ter
+   border, padding, margin. Se for linha mesmo, deixa do jeito que tá. */
+.lista { list-style: none; padding: 0; margin: 0; }
 .item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
   flex-wrap: wrap;
-  padding: 10px 0;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
   border-top: 1px solid var(--cor-borda);
 }
+.item:first-child { border-top: none; }
+.item-info strong { display: block; }
+.acoes { display: flex; gap: 4px; }
 
-.item:first-child {
-  border-top: none;
-}
-
-.item-info strong {
-  display: block;
-}
-
-.acoes {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
+/* ---- Selo (✓ feito) ----
+   No Figma: se tiver tag/badge desenhado (fundo colorido, pílula),
+   reescreve aqui com background, padding e border-radius. */
 .selo {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 999px;
   font-size: 0.8rem;
-  background: var(--cor-secundaria);
-  color: var(--cor-primaria);
-  margin-left: 6px;
+  color: var(--cor-texto-suave);
+  margin-left: 4px;
 }
+.selo.feito { color: var(--cor-sucesso); }
 
-.selo.feito {
-  background: var(--cor-sucesso);
-  color: #fff;
-}
-
+/* ---- Edição inline ----
+   Quando você clica em "editar" num treino, aparecem inputs no lugar do texto.
+   No Figma: quase nunca tem isso desenhado. Se tiver, ajusta aqui. */
 .edicao {
-  display: grid;
-  grid-template-columns: 1fr 120px auto auto;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   width: 100%;
 }
 
-/* diagnostico */
-.card-diag {
-  border-left: 6px solid var(--cor-borda);
-}
-
-.card-diag.verde {
-  border-left-color: var(--cor-sucesso);
-}
-
-.card-diag.vermelho {
-  border-left-color: var(--cor-erro);
-}
-
-.card-diag.amarelo {
-  border-left-color: var(--cor-aviso);
+/* ---- Diagnóstico ----
+   Borda normal nos cards de diagnóstico, sem tarja colorida na esquerda. */
+.card-diag,
+.card-diag.verde,
+.card-diag.vermelho,
+.card-diag.amarelo,
+.card-diag.cinza {
+  border-left: 1px solid var(--cor-borda);
 }
 
 .card-diag header {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
   align-items: baseline;
 }
+.status          { font-weight: bold; }
+.status.verde    { color: var(--cor-sucesso); }
+.status.vermelho { color: var(--cor-erro); }
+.status.amarelo  { color: var(--cor-aviso); }
 
-.status {
-  font-weight: 600;
-}
+.testes { list-style: none; padding: 0; margin: 8px 0 0; }
+.testes li { padding: 2px 0; font-size: 0.9rem; }
 
-.status.verde {
-  color: var(--cor-sucesso);
-}
-
-.status.vermelho {
-  color: var(--cor-erro);
-}
-
-.status.amarelo {
-  color: var(--cor-aviso);
-}
-
-.testes {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0 0;
-}
-
-.testes li {
-  padding: 4px 0;
-  font-size: 0.95rem;
-}
-
+/* ---- Código inline (usado pra mostrar rotas tipo "GET /treinos/total") ----
+   No Figma: se tiver um "code style" definido (fundo cinza, fonte monoespaçada),
+   troca aqui. */
 code {
   background: var(--cor-secundaria);
-  padding: 1px 5px;
-  border-radius: 4px;
+  padding: 0 4px;
   font-size: 0.9em;
-}
-
-@media (max-width: 560px) {
-  .linha-form,
-  .edicao {
-    grid-template-columns: 1fr;
-  }
 }

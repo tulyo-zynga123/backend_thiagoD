@@ -1,40 +1,130 @@
-/*
-  tokens.css
+/* =====================================================================
+   tokens.css
+   ---------------------------------------------------------------------
+   ESTE É O ÚNICO ARQUIVO QUE VOCÊ PRECISA MEXER PRA APLICAR O FIGMA.
+   Cada valor abaixo tem um comentário dizendo ONDE pegar no Figma.
+   Se você trocar aqui, o site inteiro muda. Não precisa mexer em mais
+   nenhum arquivo de CSS.
 
-  TAREFA 1: aplicar o seu Figma. Este arquivo concentra cores, forma e fonte;
-  o estilo.css usa so estas variaveis, entao nada mais precisa mudar para o visual.
-  Troque os valores pelos que estao no seu Figma (painel Inspect,
-  ou as variáveis e estilos do arquivo). Nao mude os nomes das variaveis.
-
-  Dica: depois de salvar, rode "npm run build" dentro de web/ e recarregue
-  a pagina em localhost:3000 (Ctrl+Shift+R se o navegador guardar a antiga).
-*/
+   COMO PEGAR OS VALORES NO FIGMA:
+   1. Abra o arquivo do Figma do grupo.
+   2. Selecione o elemento que você quer copiar (um botão, um cartão,
+      o fundo, um texto...).
+   3. Abra o painel "Inspect" (atalho: Shift + I, ou aba "Design"
+      -> Inspect no canto direito).
+   4. Ali aparecem:
+      - CORES: clica no quadradinho de cor e copia o HEX (#xxxxxx)
+      - TAMANHO DE FONTE: campo "Size" (ex: 16)
+      - ESPAÇAMENTO: campo "Padding" (ex: 16, ou 8 16)
+      - RAIO DE BORDA: campo "Corner radius" (ex: 8)
+      - SOMBRA: seção "Effects" (ex: "Drop shadow 0 1 3 #00000014")
+   5. Cola o valor no lugar correspondente abaixo.
+   ===================================================================== */
 
 :root {
-  /* Cores */
-  --cor-primaria: #1e5aa0;
-  --cor-primaria-texto: #ffffff;   /* texto que fica em cima da cor primaria */
-  --cor-secundaria: #e8f0fb;
-  --cor-fundo: #f5f7fa;
-  --cor-superficie: #ffffff;       /* cartoes e campos */
-  --cor-texto: #1a1a1a;
-  --cor-texto-suave: #5a6472;
-  --cor-borda: #d5dbe3;
-  --cor-sucesso: #1b7f3b;
-  --cor-erro: #b3261e;
-  --cor-aviso: #8a5a00;
 
-  /* Forma */
-  --raio-borda: 10px;              /* cartoes */
-  --raio-botao: 8px;               /* botoes e campos */
-  --sombra: 0 1px 3px rgba(0, 0, 0, 0.08);
+  /* ------------------------------------------------------------------
+     CORES
+     No Figma: painel Inspect -> "Fill" (preenchimento) ou "Stroke" (borda).
+     Clique no quadradinho colorido e copie o HEX.
+     Se o Figma tiver "Color styles" criados, você pode copiar o nome
+     do estilo (ex: "Brand/Primary") e usar exatamente a mesma cor HEX.
+     ------------------------------------------------------------------ */
 
-  /* Tipografia (a fonte do Figma precisa estar instalada na maquina
-     ou ser carregada por um link no index.html) */
-  --fonte: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* cor principal da marca (botões, títulos, links).
+     No Figma: procure o botão mais importante da tela. Pega o Fill dele. */
+  --cor-primaria: #000;
+  --cor-primaria-texto: #fff; /* texto que fica EM CIMA da cor primária (geralmente branco) */
+
+  /* cor de destaque leve (fundos de selo, realce).
+     No Figma: algum fundo suave, tipo o de uma tag ou badge. */
+  --cor-secundaria: #eee;
+
+  /* fundo geral da página.
+     No Figma: seleciona o frame principal (o "Page"/"Home"). Inspect -> Fill. */
+  --cor-fundo: #fff;
+
+  /* fundo de cartões e campos (inputs).
+     No Figma: seleciona um card branco (ou cinza claro). Inspect -> Fill. */
+  --cor-superficie: #fff;
+
+  /* cor padrão dos textos.
+     No Figma: seleciona um parágrafo. Inspect -> Fill do texto. */
+  --cor-texto: #000;
+
+  /* cor dos textos fracos (label, dica, data, "cinza").
+     No Figma: seleciona um texto secundário (ex: "3 treinos concluídos").
+     Inspect -> Fill. */
+  --cor-texto-suave: #666;
+
+  /* cor das bordas (linhas, contornos de input, separadores).
+     No Figma: seleciona um input ou uma linha divisória. Inspect -> Stroke. */
+  --cor-borda: #999;
+
+  /* cores de status (não vêm do Figma, são semânticas).
+     verde  = deu certo / concluído
+     vermelho = deu erro
+     laranja = aviso / pendente
+     Pode ajustar pro tom que combinar com a paleta do Figma. */
+  --cor-sucesso: #070;
+  --cor-erro: #c00;
+  --cor-aviso: #b60;
+
+
+  /* ------------------------------------------------------------------
+     FORMA (cantos e sombra)
+     ------------------------------------------------------------------ */
+
+  /* arredondamento dos CARTÕES (blocos grandes).
+     No Figma: seleciona um cartão. Inspect -> "Corner radius" (ex: 10).
+     Se o Figma tiver cantos diferentes por canto, use o maior. */
+  --raio-borda: 0px;
+
+  /* arredondamento dos BOTÕES e INPUTS (elementos pequenos).
+     No Figma: seleciona um botão. Inspect -> "Corner radius" (ex: 8).
+     Botão quadrado = 0px. Botão "pílula" = 999px. */
+  --raio-botao: 0px;
+
+  /* sombra dos cartões.
+     No Figma: seleciona um cartão. Painel direito -> "Effects" ->
+     "+" -> Drop shadow. Copia os 4 números (X, Y, blur, cor).
+     Exemplo: 0 1px 3px rgba(0,0,0,0.08)
+     Se não tiver sombra no Figma, deixa "none". */
+  --sombra: none;
+
+
+  /* ------------------------------------------------------------------
+     TIPOGRAFIA
+     No Figma: seleciona um texto. Inspect mostra "Font" e "Size".
+     A fonte precisa estar disponível no navegador — se o Figma usa uma
+     fonte do Google (ex: Inter, Roboto), peça pra alguém do grupo
+     adicionar o <link> dela no public/index.html.
+     ------------------------------------------------------------------ */
+
+  /* fonte de todos os textos.
+     No Figma: seleciona um texto. Inspect -> "Font family".
+     Se for uma fonte padrão do sistema, usa: sans-serif, serif, monospace.
+     Se for do Google Fonts, coloca o nome entre aspas: 'Inter', sans-serif */
+  --fonte: sans-serif;
+
+  /* tamanho base dos textos (parágrafos, labels, inputs).
+     No Figma: seleciona um parágrafo. Inspect -> "Size".
+     Geralmente 16px é o padrão. */
   --tamanho-base: 16px;
-  --tamanho-titulo: 1.5rem;
 
-  /* Espacamento */
+  /* tamanho do título principal (h1, "Treinos", "Diagnóstico").
+     No Figma: seleciona o título. Inspect -> "Size".
+     Ex: se for 24, coloca 1.5rem (= 24px). Se for 32, coloca 2rem. */
+  --tamanho-titulo: 1.4rem;
+
+
+  /* ------------------------------------------------------------------
+     ESPAÇAMENTO
+     ------------------------------------------------------------------ */
+
+  /* espaço entre as seções (cartões, abas, cabeçalho).
+     No Figma: seleciona dois cartões e olha a distância entre eles no
+     painel Inspect. Ou olha o "Padding" do container principal.
+     Geralmente 16 ou 24. */
   --espacamento: 16px;
 }
